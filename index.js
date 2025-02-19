@@ -32,9 +32,9 @@ app.use((err, req, res, next) => {
 const mainRouter = require("./routes/index");
 
 app.get("/testing", (req, res) => {
-  return res.status(200).json{
-    message: "Working successfully!";
-  }
+  return res.status(200).json({
+    message: "Working successfully!"
+  });
 })
 
 app.use("/api/v1", mainRouter);
