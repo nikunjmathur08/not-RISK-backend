@@ -2,24 +2,6 @@ const express = require("express");
 require('dotenv').config();
 const mongoose = require("mongoose");
 
-// Create a promise-based connection
-const connectDB = async () => {
-  try {
-    const mongoURI = process.env.MONGO_URI;
-    if (!mongoURI) {
-      throw new Error('MongoDB connection string is not defined in environment variables');
-    }
-    await mongoose.connect(mongoURI);
-    console.log('Successfully connected to MongoDB Atlas');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
-};
-
-// Connect to MongoDB
-connectDB();
-
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -47,10 +29,6 @@ const userSchema = new mongoose.Schema({
     minLength: 6
   }
 });
-
-module.exports = {
-  connectDB
-};
 
 const accountSchema = new mongoose.Schema({
   userId: {
@@ -134,8 +112,26 @@ const applianceSchema = new mongoose.Schema({
   }],
 });
 
-const User = new mongoose.model("User", userSchema)
-const Account = new mongoose.model("Account", accountSchema)
-const Appliance = new mongoose.model("Appliance", applianceSchema)
+const User = mongoose.model("User", userSchema);
+const Account = mongoose.model("Account", accountSchema);
+const Appliance = mongoose.model("Appliance", applianceSchema);
 
-module.exports = { User, Account, Appliance }
+// Create a promise-based connection
+const connectDB = async () => {
+  try {
+    const mongoURI = process.env.MONGO_URI;
+    if (!mongoURI) {
+      throw new Error('MongoDB connection string is not defined in environment variables');
+    }
+    await mongoose.connect(mongoURI);
+    console.log('Successfully connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+};
+
+// Connect to MongoDB
+connectDB();
+
+module.exports = { User, Account, Appliance, connectDB };
