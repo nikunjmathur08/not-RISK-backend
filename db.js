@@ -1,11 +1,16 @@
 const express = require("express");
+require('dotenv').config();
 const mongoose = require("mongoose");
 
 // Create a promise-based connection
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI;
+    if (!mongoURI) {
+      throw new Error('MongoDB connection string is not defined in environment variables');
+    }
     await mongoose.connect(mongoURI);
+    console.log('Successfully connected to MongoDB Atlas');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -42,6 +47,10 @@ const userSchema = new mongoose.Schema({
     minLength: 6
   }
 });
+
+module.exports = {
+  connectDB
+};
 
 const accountSchema = new mongoose.Schema({
   userId: {
